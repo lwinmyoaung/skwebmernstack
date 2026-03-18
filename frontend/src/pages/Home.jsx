@@ -42,10 +42,10 @@ const GameCard = ({ game, getImageUrl }) => {
             {!imagesLoaded[idx] && (
               <div className="absolute inset-0 bg-white/10 animate-pulse"></div>
             )}
-            <img 
-              src={getImageUrl(img)} 
-              alt={`${game.name} ${idx}`} 
-              loading="lazy"
+            <img
+              src={getImageUrl(img)}
+              alt={`${game.name} ${idx}`}
+              loading={idx === 0 ? "eager" : "lazy"}
               decoding="async"
               onLoad={() => handleImageLoad(idx)}
               className={`w-full h-full object-cover transition-opacity duration-500 ${imagesLoaded[idx] ? 'opacity-100' : 'opacity-0'}`}
@@ -158,16 +158,30 @@ function Home() {
         <div className="relative h-[250px] md:h-[450px] lg:h-[550px] rounded-[2.5rem] overflow-hidden group shadow-[0_30px_60px_rgba(0,0,0,0.8)] border border-white/5">
           {slides.length > 0 ? (
             slides.map((slide, index) => (
-              <div 
+              <div
                 key={index}
                 className={`absolute inset-0 transition-all duration-1000 ease-in-out transform ${index === currentSlide ? 'opacity-100 scale-100' : 'opacity-0 scale-105'}`}
               >
                 {slide.link ? (
                   <Link to={slide.link}>
-                    <img src={getImageUrl(slide.image)} alt={slide.title || `Promotion ${index + 1}`} loading="lazy" className="w-full h-full object-cover" />
+                    <img 
+                      src={getImageUrl(slide.image)} 
+                      alt={slide.title || `Promotion ${index + 1}`} 
+                      fetchpriority={index === 0 ? "high" : "auto"}
+                      loading={index === 0 ? "eager" : "lazy"} 
+                      decoding="async"
+                      className="w-full h-full object-cover" 
+                    />  
                   </Link>
                 ) : (
-                  <img src={getImageUrl(slide.image)} alt={slide.title || `Promotion ${index + 1}`} loading="lazy" className="w-full h-full object-cover" />
+                  <img 
+                    src={getImageUrl(slide.image)} 
+                    alt={slide.title || `Promotion ${index + 1}`} 
+                    fetchpriority={index === 0 ? "high" : "auto"}
+                    loading={index === 0 ? "eager" : "lazy"} 
+                    decoding="async"
+                    className="w-full h-full object-cover" 
+                  />    
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent pointer-events-none"></div>
               </div>

@@ -470,7 +470,7 @@ function GameDetail() {
                           className={`relative cursor-pointer p-3 md:p-4 border rounded-xl md:rounded-2xl transition-all duration-300 flex flex-col sm:flex-row items-center sm:items-start gap-2 sm:gap-4 text-center sm:text-left ${region === r.id ? 'border-primary bg-primary/10 shadow-[0_0_20px_rgba(212,175,55,0.1)]' : 'border-white/5 bg-white/5 hover:border-white/20'}`}
                         >
                           <input type="radio" name="region" value={r.id} checked={region === r.id} onChange={() => setRegion(r.id)} className="hidden" />
-                          <img src={r.flag} alt={r.name} loading="lazy" className="w-8 h-5 md:w-10 md:h-6 object-cover rounded-sm md:rounded-md shadow-lg" />
+                          <img src={r.flag} alt={r.name} fetchpriority="high" loading="eager" decoding="async" className="w-8 h-5 md:w-10 md:h-6 object-cover rounded-sm md:rounded-md shadow-lg" />
                           <span className={`font-bold uppercase tracking-wider text-[10px] md:text-xs ${region === r.id ? 'text-primary' : 'text-gray-400'}`}>{r.name}</span>
                           {region === r.id && <CheckCircle size={14} className="absolute top-2 right-2 md:top-3 md:right-3 text-primary animate-in zoom-in md:w-[18px] md:h-[18px]" />}
                         </label>
@@ -683,7 +683,7 @@ function GameDetail() {
                             }}
                             className={`p-3 md:p-4 border rounded-xl md:rounded-2xl transition-all flex flex-col sm:flex-row items-center sm:items-start gap-2 sm:gap-4 text-center sm:text-left ${selectedPayment?._id === pm._id ? 'border-primary bg-primary/10 shadow-lg' : 'border-white/5 bg-white/5 hover:border-white/20'}`}
                           >
-                            <img src={pm.image} alt={pm.name} loading="lazy" className="w-10 h-10 md:w-14 md:h-14 rounded-lg md:rounded-xl object-cover shadow-lg" />
+                            <img src={pm.image} alt={pm.name} loading="eager" decoding="async" className="w-10 h-10 md:w-14 md:h-14 rounded-lg md:rounded-xl object-cover shadow-lg" />
                             <div className="flex flex-col">
                               <span className={`font-black uppercase tracking-widest text-[9px] md:text-[10px] ${selectedPayment?._id === pm._id ? 'text-primary' : 'text-gray-500'}`}>{pm.name}</span>
                               <span className="text-[7px] md:text-[8px] font-bold text-gray-600 tracking-tighter">{pm.phone_number}</span>
@@ -699,7 +699,8 @@ function GameDetail() {
                           <img 
                             src={selectedPayment.image} 
                             alt={selectedPayment.name} 
-                            loading="lazy"
+                            loading="eager"
+                            decoding="async"
                             className="w-32 h-32 md:w-40 md:h-40 object-contain rounded-xl shadow-2xl border border-white/10 bg-white/5 p-2" 
                             style={{ WebkitTouchCallout: 'default', userSelect: 'auto' }}
                           />
