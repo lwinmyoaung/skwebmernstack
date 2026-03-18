@@ -165,7 +165,7 @@ exports.deleteGameImage = async (req, res, next) => {
     const gameImage = await GameImage.findById(req.params.id);
 
     if (!gameImage) {
-      return res.status(404).json({ success: false, message: 'Game image not found' });
+      return res.status(404).json({ success: true, message: 'Game image already deleted' });
     }
 
     // Delete image file if it's in /uploads
@@ -177,18 +177,20 @@ exports.deleteGameImage = async (req, res, next) => {
           fs.unlinkSync(imagePath);
         }
       } catch (fileErr) {
-        console.error('File deletion error:', fileErr);
+        console.error('Physical file deletion error (continuing DB deletion):', fileErr.message);
       }
     }
 
-    await GameImage.findByIdAndDelete(req.params.id);
+    // Direct deletion from MongoDB
+    await GameImage.deleteOne({ _id: req.params.id });
 
     res.status(200).json({
       success: true,
-      message: 'Game image deleted successfully',
+      message: 'Game image deleted successfully from database',
       data: {},
     });
   } catch (err) {
+    console.error('Full delete error:', err.message);
     res.status(400).json({ success: false, message: err.message });
   }
 };

@@ -47,7 +47,8 @@ const AdminGameImageManager = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.get(`${API_BASE}/api/v1/game-images/admin`, {
+      // Add timestamp to bypass potential CDN/Browser cache
+      const res = await axios.get(`${API_BASE}/api/v1/game-images/admin?t=${Date.now()}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setImages(res.data.data);
@@ -142,6 +143,10 @@ const AdminGameImageManager = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this image?')) return;
     
+    // Optimistic UI Update: Remove from state immediately
+    const previousImages = [...images];
+    setImages(images.filter(img => img._id !== id));
+
     try {
       const token = localStorage.getItem('token');
       const res = await axios.delete(`${API_BASE}/api/v1/game-images/${id}`, {
@@ -149,10 +154,16 @@ const AdminGameImageManager = () => {
       });
       
       if (res.data.success) {
-        alert('Image deleted successfully');
+        // Just refresh silently to keep data in sync
         fetchImages();
+      } else {
+        // Rollback if server returns failure
+        setImages(previousImages);
+        alert(res.data.message || 'Failed to delete game image');
       }
     } catch (err) {
+      // Rollback on error
+      setImages(previousImages);
       console.error('Error deleting game image', err);
       alert(err.response?.data?.message || 'Failed to delete game image');
     }
