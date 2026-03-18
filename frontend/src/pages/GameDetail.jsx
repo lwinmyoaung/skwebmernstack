@@ -66,9 +66,13 @@ function GameDetail() {
 
   useEffect(() => {
     const checkGameStatus = async () => {
-      setGameChecking(true);
+      // Set checking to false early to show the UI immediately
+      const initialTimer = setTimeout(() => setGameChecking(false), 200);
+      
       try {
         const res = await axios.get(`${API_URL}/api/v1/games/${gameId}`);
+        clearTimeout(initialTimer);
+        
         if (res.data.success && res.data.data) {
           setGameActive(res.data.data.isActive);
         } else {
@@ -76,7 +80,12 @@ function GameDetail() {
         }
       } catch (err) {
         console.error('Error checking game status', err);
-        setGameActive(false);
+        // If it's a 404, we should show NotFound, otherwise assume it's active but server is just slow
+        if (err.response?.status === 404) {
+          setGameActive(false);
+        } else {
+          setGameActive(true); 
+        }
       } finally {
         setGameChecking(false);
       }
@@ -86,9 +95,13 @@ function GameDetail() {
 
   useEffect(() => {
     const fetchProducts = async () => {
-      setLoading(true);
+      // Set loading to false early to show skeleton product cards
+      const initialTimer = setTimeout(() => setLoading(false), 200);
+      
       try {
         const res = await axios.get(`${API_URL}/api/v1/products/${gameId}?region=${region}`);
+        clearTimeout(initialTimer);
+        
         const normalizedData = res.data.data.map(p => ({
           ...p,
           _id: p.product_id || p._id,
@@ -516,39 +529,38 @@ function GameDetail() {
                     </div>
                   </div>
                   <div className="p-4 md:p-8">
-                    {loading ? (
-                      <div className="flex flex-col items-center py-20 gap-4">
-                        <RefreshCw className="animate-spin text-primary" size={48} />
-                        <p className="text-gray-500 font-bold uppercase tracking-widest text-xs">Accessing Game Inventory...</p>
+                    {loading && products.length === 0 ? (
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4">
+                        {[1, 2, 3, 4, 5, 6].map(i => (
+                          <div key={i} className="h-32 md:h-44 rounded-3xl bg-white/5 animate-pulse border border-white/5"></div>
+                        ))}
                       </div>
                     ) : (
-                      <>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4">
-                          {products.map((p) => (
-                            <button
-                              key={p._id}
-                              type="button"
-                              onClick={() => {
-                                setSelectedProduct(p);
-                                setNickname(''); // Reset verification if product changes
-                                setTimeout(() => setCurrentStep(3), 200); // Auto-advance
-                              }}
-                              className={`relative p-4 md:p-6 border rounded-[1.5rem] md:rounded-[2rem] text-left transition-all duration-300 group ${selectedProduct?._id === p._id ? 'border-primary bg-primary/10 shadow-[0_0_30px_rgba(212,175,55,0.1)]' : 'border-white/5 bg-white/5 hover:border-white/20'}`}
-                            >
-                              <div className="mb-3 md:mb-4 w-8 h-8 md:w-10 md:h-10 rounded-xl bg-white/5 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                                <Zap size={16} className={selectedProduct?._id === p._id ? 'text-primary' : 'text-gray-500'} />
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4">
+                        {products.map((p) => (
+                          <button
+                            key={p._id}
+                            type="button"
+                            onClick={() => {
+                              setSelectedProduct(p);
+                              setNickname(''); // Reset verification if product changes
+                              setTimeout(() => setCurrentStep(3), 200); // Auto-advance
+                            }}
+                            className={`relative p-4 md:p-6 border rounded-[1.5rem] md:rounded-[2rem] text-left transition-all duration-300 group ${selectedProduct?._id === p._id ? 'border-primary bg-primary/10 shadow-[0_0_30px_rgba(212,175,55,0.1)]' : 'border-white/5 bg-white/5 hover:border-white/20'}`}
+                          >
+                            <div className="mb-3 md:mb-4 w-8 h-8 md:w-10 md:h-10 rounded-xl bg-white/5 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                              <Zap size={16} className={selectedProduct?._id === p._id ? 'text-primary' : 'text-gray-500'} />
+                            </div>
+                            <p className={`font-black text-sm md:text-lg leading-tight mb-1 md:mb-2 ${selectedProduct?._id === p._id ? 'text-white' : 'text-gray-400'}`}>{p.name}</p>
+                            <p className="text-primary font-black text-xs md:text-sm tracking-tight">{p.price.toLocaleString()} Ks</p>
+                            {selectedProduct?._id === p._id && (
+                              <div className="absolute top-3 right-3 md:top-4 md:right-4 w-5 h-5 md:w-6 md:h-6 bg-primary rounded-full flex items-center justify-center text-black">
+                                <CheckCircle size={12} />
                               </div>
-                              <p className={`font-black text-sm md:text-lg leading-tight mb-1 md:mb-2 ${selectedProduct?._id === p._id ? 'text-white' : 'text-gray-400'}`}>{p.name}</p>
-                              <p className="text-primary font-black text-xs md:text-sm tracking-tight">{p.price.toLocaleString()} Ks</p>
-                              {selectedProduct?._id === p._id && (
-                                <div className="absolute top-3 right-3 md:top-4 md:right-4 w-5 h-5 md:w-6 md:h-6 bg-primary rounded-full flex items-center justify-center text-black">
-                                  <CheckCircle size={12} />
-                                </div>
-                              )}
-                            </button>
-                          ))}
-                        </div>
-                      </>
+                            )}
+                          </button>
+                        ))}
+                      </div>
                     )}
                   </div>
                 </section>
