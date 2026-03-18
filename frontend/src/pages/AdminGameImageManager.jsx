@@ -144,13 +144,17 @@ const AdminGameImageManager = () => {
     
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`${API_BASE}/api/v1/game-images/${id}`, {
+      const res = await axios.delete(`${API_BASE}/api/v1/game-images/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      fetchImages();
+      
+      if (res.data.success) {
+        alert('Image deleted successfully');
+        fetchImages();
+      }
     } catch (err) {
       console.error('Error deleting game image', err);
-      alert('Failed to delete game image');
+      alert(err.response?.data?.message || 'Failed to delete game image');
     }
   };
 

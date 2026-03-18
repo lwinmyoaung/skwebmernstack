@@ -128,11 +128,16 @@ exports.updateGameImage = (req, res, next) => {
       if (req.file) {
         // Delete old image if exists
         if (gameImage.image && gameImage.image.startsWith('/uploads')) {
-          // Remove the leading slash if present for path.join
-          const relativePath = gameImage.image.startsWith('/') ? gameImage.image.slice(1) : gameImage.image;
-          const oldImagePath = path.join(__dirname, '../../frontend/public', relativePath);
-          if (fs.existsSync(oldImagePath)) {
-            fs.unlinkSync(oldImagePath);
+          try {
+            // Remove the leading slash if present for path.join
+            const relativePath = gameImage.image.startsWith('/') ? gameImage.image.slice(1) : gameImage.image;
+            const oldImagePath = path.join(__dirname, '../../frontend/public', relativePath);
+            if (fs.existsSync(oldImagePath)) {
+              fs.unlinkSync(oldImagePath);
+            }
+          } catch (fileErr) {
+            console.error('File deletion error:', fileErr);
+            // Continue with update even if old file deletion fails
           }
         }
         updateData.image = `/uploads/game-images/${req.file.filename}`;
@@ -164,20 +169,24 @@ exports.deleteGameImage = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Game image not found' });
     }
 
-    // Delete image file if it's not a default image
+    // Delete image file if it's in /uploads
     if (gameImage.image && gameImage.image.startsWith('/uploads')) {
-      // Remove the leading slash if present for path.join
-      const relativePath = gameImage.image.startsWith('/') ? gameImage.image.slice(1) : gameImage.image;
-      const imagePath = path.join(__dirname, '../../frontend/public', relativePath);
-      if (fs.existsSync(imagePath)) {
-        fs.unlinkSync(imagePath);
+      try {
+        const relativePath = gameImage.image.startsWith('/') ? gameImage.image.slice(1) : gameImage.image;
+        const imagePath = path.join(__dirname, '../../frontend/public', relativePath);
+        if (fs.existsSync(imagePath)) {
+          fs.unlinkSync(imagePath);
+        }
+      } catch (fileErr) {
+        console.error('File deletion error:', fileErr);
       }
     }
 
-    await gameImage.deleteOne();
+    await GameImage.findByIdAndDelete(req.params.id);
 
     res.status(200).json({
       success: true,
+      message: 'Game image deleted successfully',
       data: {},
     });
   } catch (err) {
