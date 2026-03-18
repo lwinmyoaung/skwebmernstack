@@ -1,10 +1,17 @@
 const PaymentMethod = require('../models/PaymentMethod');
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 
 // Multer setup for image uploads
 const storage = multer.diskStorage({
-  destination: '../frontend/public/uploads/paymentmethods',
+  destination: function(req, file, cb) {
+    const uploadDir = path.join(__dirname, '../../frontend/public/uploads/paymentmethods');
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    cb(null, uploadDir);
+  },
   filename: function(req, file, cb) {
     cb(null, 'payment-' + Date.now() + path.extname(file.originalname));
   }
@@ -77,19 +84,47 @@ exports.createPaymentMethod = (req, res, next) => {
 // @desc    Update payment method
 // @route   PUT /api/v1/payment-methods/:id
 // @access  Private/Admin
-exports.updatePaymentMethod = async (req, res, next) => {
-  try {
-    const method = await PaymentMethod.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    });
-    if (!method) {
-      return res.status(404).json({ success: false, message: 'Payment method not found' });
+exports.updatePaymentMethod = (req, res, next) => {
+  upload(req, res, async (err) => {
+    if (err) {
+      return res.status(400).json({ success: false, message: err });
     }
-    res.status(200).json({ success: true, data: method });
-  } catch (err) {
-    res.status(400).json({ success: false, message: err.message });
-  }
+
+    try {
+      let method = await PaymentMethod.findById(req.params.id);
+
+      if (!method) {
+        return res.status(404).json({ success: false, message: 'Payment method not found' });
+      }
+
+      const { name, phone_number, status } = req.body;
+      const updateData = {
+        name: name || method.name,
+        phone_number: phone_number || method.phone_number,
+        status: status || method.status
+      };
+
+      if (req.file) {
+        // Delete old image if it exists and is in /uploads
+        if (method.image && method.image.startsWith('/uploads')) {
+          const oldImagePath = path.join(__dirname, '../../frontend/public', method.image);
+          if (fs.existsSync(oldImagePath)) {
+            fs.unlinkSync(oldImagePath);
+          }
+        }
+        updateData.image = `/uploads/paymentmethods/${req.file.filename}`;
+      }
+
+      method = await PaymentMethod.findByIdAndUpdate(req.params.id, updateData, {
+        new: true,
+        runValidators: true,
+      });
+
+      res.status(200).json({ success: true, data: method });
+    } catch (dbErr) {
+      res.status(400).json({ success: false, message: dbErr.message });
+    }
+  });
 };
 
 // @desc    Delete payment method
@@ -97,10 +132,20 @@ exports.updatePaymentMethod = async (req, res, next) => {
 // @access  Private/Admin
 exports.deletePaymentMethod = async (req, res, next) => {
   try {
-    const method = await PaymentMethod.findByIdAndDelete(req.params.id);
+    const method = await PaymentMethod.findById(req.params.id);
     if (!method) {
       return res.status(404).json({ success: false, message: 'Payment method not found' });
     }
+
+    // Delete image file if it exists and is in /uploads
+    if (method.image && method.image.startsWith('/uploads')) {
+      const imagePath = path.join(__dirname, '../../frontend/public', method.image);
+      if (fs.existsSync(imagePath)) {
+        fs.unlinkSync(imagePath);
+      }
+    }
+
+    await method.deleteOne();
     res.status(200).json({ success: true, data: {} });
   } catch (err) {
     res.status(400).json({ success: false, message: err.message });

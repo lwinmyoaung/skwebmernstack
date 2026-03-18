@@ -4,17 +4,10 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API_URL } from '../config';
 import { getImageUrl } from '../utils/image';
+import DecoupledImage from '../components/DecoupledImage';
 
 const GameCard = ({ game }) => {
   const [currentImgIndex, setCurrentImgIndex] = useState(0);
-  const [imagesLoaded, setImagesLoaded] = useState({});
-  const [shouldLoadImages, setShouldLoadImages] = useState(false);
-
-  useEffect(() => {
-    // Delay setting shouldLoadImages until after component mount
-    const timer = setTimeout(() => setShouldLoadImages(true), 500);
-    return () => clearTimeout(timer);
-  }, []);
 
   useEffect(() => {
     if (game.images && game.images.length > 1) {
@@ -24,10 +17,6 @@ const GameCard = ({ game }) => {
       return () => clearInterval(timer);
     }
   }, [game.images]);
-
-  const handleImageLoad = (idx) => {
-    setImagesLoaded(prev => ({ ...prev, [idx]: true }));
-  };
 
   return (
     <Link
@@ -47,19 +36,13 @@ const GameCard = ({ game }) => {
       <div className="relative h-full w-full overflow-hidden bg-white/5 aspect-[4/5] md:aspect-[2/3]">       
         {game.images.map((img, idx) => (
           <div key={idx} className={`absolute inset-0 transition-all duration-1000 ease-in-out ${idx === currentImgIndex ? 'opacity-100 scale-110 rotate-1' : 'opacity-0 scale-100 rotate-0'}`}>
-            {!imagesLoaded[idx] && (
-              <div className="absolute inset-0 bg-white/10 animate-pulse"></div>
-            )}
-            {shouldLoadImages && (
-              <img
-                src={getImageUrl(img)}
-                alt={`${game.name} ${idx}`}
-                loading={idx === 0 ? "eager" : "lazy"}
-                decoding="async"
-                onLoad={() => handleImageLoad(idx)}
-                className={`w-full h-full object-cover transition-opacity duration-500 ${imagesLoaded[idx] ? 'opacity-100' : 'opacity-0'}`}
-              />
-            )}
+            <DecoupledImage 
+              src={getImageUrl(img)}
+              alt={`${game.name} ${idx}`}
+              aspectRatio="h-full w-full"
+              delay={600}
+              priority="low"
+            />
           </div>
         ))}
         {/* Overlay Gradients */}
@@ -93,12 +76,6 @@ function Home() {
   const [gameImages, setGameImages] = useState([]);
   const [activeGames, setActiveGames] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [shouldLoadHero, setShouldLoadHero] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setShouldLoadHero(true), 100);
-    return () => clearTimeout(timer);
-  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -183,30 +160,24 @@ function Home() {
                 key={index}
                 className={`absolute inset-0 transition-all duration-1000 ease-in-out transform ${index === currentSlide ? 'opacity-100 scale-100' : 'opacity-0 scale-105'}`}
               >
-                {shouldLoadHero && (
-                  <>
-                    {slide.link ? (
-                      <Link to={slide.link}>
-                        <img 
-                          src={getImageUrl(slide.image)} 
-                          alt={slide.title || `Promotion ${index + 1}`} 
-                          fetchpriority={index === 0 ? "high" : "auto"}
-                          loading={index === 0 ? "eager" : "lazy"} 
-                          decoding="async"
-                          className="w-full h-full object-cover" 
-                        />  
-                      </Link>
-                    ) : (
-                      <img 
-                        src={getImageUrl(slide.image)} 
-                        alt={slide.title || `Promotion ${index + 1}`} 
-                        fetchpriority={index === 0 ? "high" : "auto"}
-                        loading={index === 0 ? "eager" : "lazy"} 
-                        decoding="async"
-                        className="w-full h-full object-cover" 
-                      />    
-                    )}
-                  </>
+                {slide.link ? (
+                  <Link to={slide.link}>
+                    <DecoupledImage 
+                      src={getImageUrl(slide.image)}
+                      alt={slide.title || `Promotion ${index + 1}`}
+                      aspectRatio="h-full w-full"
+                      delay={200}
+                      priority={index === 0 ? "high" : "low"}
+                    />
+                  </Link>
+                ) : (
+                  <DecoupledImage 
+                    src={getImageUrl(slide.image)}
+                    alt={slide.title || `Promotion ${index + 1}`}
+                    aspectRatio="h-full w-full"
+                    delay={200}
+                    priority={index === 0 ? "high" : "low"}
+                  />
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent pointer-events-none"></div>
               </div>

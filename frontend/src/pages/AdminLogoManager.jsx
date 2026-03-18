@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API_URL } from '../config';
+import { getImageUrl } from '../utils/image';
 import { 
   Plus, 
   Trash2, 
@@ -133,7 +134,7 @@ const AdminLogoManager = () => {
     setLink(logo.link || '');
     setDisplayOrder(logo.displayOrder || 0);
     setIsActive(logo.isActive);
-    setImagePreview(`${API_URL}${logo.image}`);
+    setImagePreview(getImageUrl(logo.image));
     setShowAddModal(true);
   };
 
@@ -150,13 +151,6 @@ const AdminLogoManager = () => {
       console.error('Error deleting logo', err);
       alert('Failed to delete logo');
     }
-  };
-
-  const getImageUrl = (path) => {
-    if (!path) return '';
-    if (path.startsWith('http') || path.startsWith('data:')) return path;
-    if (path.startsWith('/adminimages')) return path;
-    return `${API_URL}${path}`;
   };
 
   return (

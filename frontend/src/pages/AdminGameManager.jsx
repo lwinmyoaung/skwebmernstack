@@ -42,11 +42,11 @@ const AdminGameManager = () => {
     try {
       const token = localStorage.getItem('token');
       const defaults = [
-        { gameId: 'mlbb', name: 'Mobile Legends', defaultImage: '/adminimages/photo/1BcdDv9B90JnlajqQvQaO3PBabTVre9U7A87diA1.jpg', badge: 'MOST POPULAR', color: 'from-blue-600/20 to-primary/20', order: 1 },
-        { gameId: 'mcgg', name: 'Magic Chess GoGo', defaultImage: '/adminimages/photo/dmGEycfKf49L9fK6E64aG4CTBDCv9CnPw7eWA5V1.png', badge: 'NEW', color: 'from-purple-600/20 to-primary/20', order: 2 },
-        { gameId: 'pubg', name: 'PUBG Mobile', defaultImage: '/adminimages/photo/mjOPd1akM06euiAdpG1vhTnwREEX8UbAJrez2Phv.jpg', badge: 'HOT', color: 'from-orange-600/20 to-primary/20', order: 3 },
-        { gameId: 'wwm', name: 'WWM', defaultImage: '/adminimages/photo/z7SRsbBx9OlAo35d30jtryRHuvPkaAxCeWFeD1vf.jpg', badge: 'TRENDING', color: 'from-red-600/20 to-primary/20', order: 4 },
-        { gameId: 'freefire', name: 'Free Fire', defaultImage: '/adminimages/photo/1BcdDv9B90JnlajqQvQaO3PBabTVre9U7A87diA1.jpg', badge: 'POPULAR', color: 'from-orange-600/20 to-primary/20', order: 5 },
+        { gameId: 'mlbb', name: 'Mobile Legends', defaultImage: '/uploads/photo/1BcdDv9B90JnlajqQvQaO3PBabTVre9U7A87diA1.jpg', badge: 'MOST POPULAR', color: 'from-blue-600/20 to-primary/20', order: 1 },
+        { gameId: 'mcgg', name: 'Magic Chess GoGo', defaultImage: '/uploads/photo/dmGEycfKf49L9fK6E64aG4CTBDCv9CnPw7eWA5V1.png', badge: 'NEW', color: 'from-purple-600/20 to-primary/20', order: 2 },
+        { gameId: 'pubg', name: 'PUBG Mobile', defaultImage: '/uploads/photo/mjOPd1akM06euiAdpG1vhTnwREEX8UbAJrez2Phv.jpg', badge: 'HOT', color: 'from-orange-600/20 to-primary/20', order: 3 },
+        { gameId: 'wwm', name: 'WWM', defaultImage: '/uploads/photo/z7SRsbBx9OlAo35d30jtryRHuvPkaAxCeWFeD1vf.jpg', badge: 'TRENDING', color: 'from-red-600/20 to-primary/20', order: 4 },
+        { gameId: 'freefire', name: 'Free Fire', defaultImage: '/uploads/photo/1BcdDv9B90JnlajqQvQaO3PBabTVre9U7A87diA1.jpg', badge: 'POPULAR', color: 'from-orange-600/20 to-primary/20', order: 5 },
       ];
 
       for (const game of defaults) {
