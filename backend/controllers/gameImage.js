@@ -129,7 +129,7 @@ exports.updateGameImage = (req, res, next) => {
         // Delete old image if exists
         if (gameImage.image && gameImage.image.startsWith('/uploads')) {
           try {
-            // Remove the leading slash if present for path.join
+            // Normalize path by removing leading slash for path.join
             const relativePath = gameImage.image.startsWith('/') ? gameImage.image.slice(1) : gameImage.image;
             const oldImagePath = path.join(__dirname, '../../frontend/public', relativePath);
             if (fs.existsSync(oldImagePath)) {
@@ -137,7 +137,6 @@ exports.updateGameImage = (req, res, next) => {
             }
           } catch (fileErr) {
             console.error('File deletion error:', fileErr);
-            // Continue with update even if old file deletion fails
           }
         }
         updateData.image = `/uploads/game-images/${req.file.filename}`;

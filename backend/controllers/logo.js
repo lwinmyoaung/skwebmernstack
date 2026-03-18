@@ -154,10 +154,15 @@ exports.updateLogo = (req, res, next) => {
       if (req.file) {
         // Delete old image if exists
         if (logo.image && logo.image.startsWith('/uploads')) {
-          const relativePath = logo.image.startsWith('/') ? logo.image.slice(1) : logo.image;
-          const oldImagePath = path.join(__dirname, '../../frontend/public', relativePath);
-          if (fs.existsSync(oldImagePath)) {
-            fs.unlinkSync(oldImagePath);
+          try {
+            // Normalize path by removing leading slash for path.join
+            const relativePath = logo.image.startsWith('/') ? logo.image.slice(1) : logo.image;
+            const oldImagePath = path.join(__dirname, '../../frontend/public', relativePath);
+            if (fs.existsSync(oldImagePath)) {
+              fs.unlinkSync(oldImagePath);
+            }
+          } catch (fileErr) {
+            console.error('File deletion error:', fileErr);
           }
         }
         updateData.image = `/uploads/logo/${req.file.filename}`;

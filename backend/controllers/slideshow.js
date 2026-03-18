@@ -126,10 +126,15 @@ exports.updateSlideshow = (req, res, next) => {
       if (req.file) {
         // Delete old image if exists
         if (slideshow.image && slideshow.image.startsWith('/uploads')) {
-          const relativePath = slideshow.image.startsWith('/') ? slideshow.image.slice(1) : slideshow.image;
-          const oldImagePath = path.join(__dirname, '../../frontend/public', relativePath);
-          if (fs.existsSync(oldImagePath)) {
-            fs.unlinkSync(oldImagePath);
+          try {
+            // Normalize path by removing leading slash for path.join
+            const relativePath = slideshow.image.startsWith('/') ? slideshow.image.slice(1) : slideshow.image;
+            const oldImagePath = path.join(__dirname, '../../frontend/public', relativePath);
+            if (fs.existsSync(oldImagePath)) {
+              fs.unlinkSync(oldImagePath);
+            }
+          } catch (fileErr) {
+            console.error('File deletion error:', fileErr);
           }
         }
         updateData.image = `/uploads/slideshow/${req.file.filename}`;

@@ -105,11 +105,17 @@ exports.updatePaymentMethod = (req, res, next) => {
       };
 
       if (req.file) {
-        // Delete old image if it exists and is in /uploads
+        // Delete old image if exists
         if (method.image && method.image.startsWith('/uploads')) {
-          const oldImagePath = path.join(__dirname, '../../frontend/public', method.image);
-          if (fs.existsSync(oldImagePath)) {
-            fs.unlinkSync(oldImagePath);
+          try {
+            // Normalize path by removing leading slash for path.join
+            const relativePath = method.image.startsWith('/') ? method.image.slice(1) : method.image;
+            const oldImagePath = path.join(__dirname, '../../frontend/public', relativePath);
+            if (fs.existsSync(oldImagePath)) {
+              fs.unlinkSync(oldImagePath);
+            }
+          } catch (fileErr) {
+            console.error('File deletion error:', fileErr);
           }
         }
         updateData.image = `/uploads/paymentmethods/${req.file.filename}`;
@@ -139,9 +145,14 @@ exports.deletePaymentMethod = async (req, res, next) => {
 
     // Delete image file if it exists and is in /uploads
     if (method.image && method.image.startsWith('/uploads')) {
-      const imagePath = path.join(__dirname, '../../frontend/public', method.image);
-      if (fs.existsSync(imagePath)) {
-        fs.unlinkSync(imagePath);
+      try {
+        const relativePath = method.image.startsWith('/') ? method.image.slice(1) : method.image;
+        const imagePath = path.join(__dirname, '../../frontend/public', relativePath);
+        if (fs.existsSync(imagePath)) {
+          fs.unlinkSync(imagePath);
+        }
+      } catch (fileErr) {
+        console.error('File deletion error:', fileErr);
       }
     }
 
