@@ -44,7 +44,7 @@ exports.seedDefaultLogo = async (req, res, next) => {
 
     const defaultLogo = await Logo.create({
       name: 'Default Main Logo',
-      image: '/adminimages/logo/skincollector.jpg',
+      image: '/uploads/logo/skincollector.jpg',
       link: '/',
       displayOrder: 1,
       isActive: true

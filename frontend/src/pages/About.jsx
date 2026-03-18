@@ -3,6 +3,7 @@ import { Trophy, Users, Globe, ShieldCheck, Zap, Crown, Star, Heart } from 'luci
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { API_URL } from '../config';
+import { getImageUrl } from '../utils/image';
 
 const About = () => {
   const [logo, setLogo] = useState(null);
@@ -87,7 +88,7 @@ const About = () => {
           <div className="relative group animate-in slide-in-from-left-8 duration-1000 delay-400">
             <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-all duration-700"></div>
             <img 
-              src={logo ? `${API_URL}${logo.image}` : "/adminimages/logo/skincollector.jpg"} 
+              src={logo ? getImageUrl(logo.image) : "/uploads/logo/skincollector.jpg"} 
               alt={logo ? logo.name : "Our Story"} 
               loading="lazy"
               className="relative w-full aspect-square object-cover rounded-[3rem] border border-white/10 shadow-2xl"

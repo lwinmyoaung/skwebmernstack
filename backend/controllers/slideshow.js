@@ -147,9 +147,9 @@ exports.updateSlideshow = (req, res, next) => {
 exports.seedSlideshows = async (req, res, next) => {
   try {
     const defaults = [
-      { image: '/adminimages/ads/slides/BamR8QemjnTKb0V3S6Ki1CeMgJcR52rmevzDJuDX.png', title: 'Level Up Your Gaming', order: 1 },
-      { image: '/adminimages/ads/slides/OOQ8ifGjUv1VKxq4sWPsAJcU8qfrRvhrEzDs1C11.jpg', title: 'Premium Digital Store', order: 2 },
-      { image: '/adminimages/ads/slides/yjspOcki7jMtVj1omqxhFZlI6RZH8Iq3tNEOyjZI.jpg', title: 'Official Gaming Partner', order: 3 },
+      { image: '/uploads/ads/slides/BamR8QemjnTKb0V3S6Ki1CeMgJcR52rmevzDJuDX.png', title: 'Level Up Your Gaming', order: 1 },
+      { image: '/uploads/ads/slides/OOQ8ifGjUv1VKxq4sWPsAJcU8qfrRvhrEzDs1C11.jpg', title: 'Premium Digital Store', order: 2 },
+      { image: '/uploads/ads/slides/yjspOcki7jMtVj1omqxhFZlI6RZH8Iq3tNEOyjZI.jpg', title: 'Official Gaming Partner', order: 3 },
     ];
 
     // Check if any of these already exist to avoid duplicates (optional)

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API_URL } from '../config';
+import { getImageUrl } from '../utils/image';
 import { 
   Plus, 
   Trash2, 
@@ -154,13 +155,6 @@ const AdminSlideshowManager = () => {
     setIsActive(slide.isActive);
     setImagePreview(slide.image);
     setShowAddModal(true);
-  };
-
-  const getImageUrl = (path) => {
-    if (!path) return '';
-    if (path.startsWith('http') || path.startsWith('data:')) return path;
-    if (path.startsWith('/adminimages')) return path;
-    return `${API_URL}${path}`;
   };
 
   return (

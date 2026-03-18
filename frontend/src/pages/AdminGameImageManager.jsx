@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API_URL } from '../config';
+import { getImageUrl } from '../utils/image';
 import { 
   Plus, 
   Trash2, 
@@ -34,7 +35,8 @@ const AdminGameImageManager = () => {
     { id: 'mlbb', name: 'Mobile Legends' },
     { id: 'pubg', name: 'PUBG Mobile' },
     { id: 'mcgg', name: 'Magic Chess GoGo' },
-    { id: 'wwm', name: 'WWM' }
+    { id: 'wwm', name: 'WWM' },
+    { id: 'freefire', name: 'Free Fire' }
   ];
 
   useEffect(() => {
@@ -161,12 +163,7 @@ const AdminGameImageManager = () => {
     setShowAddModal(true);
   };
 
-  const getImageUrl = (path) => {
-    if (!path) return '';
-    if (path.startsWith('http') || path.startsWith('data:')) return path;
-    if (path.startsWith('/adminimages')) return path;
-    return `${API_BASE}${path}`;
-  };
+
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl pb-32">

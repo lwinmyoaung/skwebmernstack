@@ -14,6 +14,7 @@ import {
 import axios from 'axios';
 
 import { API_URL } from '../config';
+import { getImageUrl } from '../utils/image';
 
 const Footer = () => {
   const [contacts, setContacts] = useState([]);
@@ -70,7 +71,7 @@ const Footer = () => {
           <div className="flex flex-col gap-4 md:gap-6">
             <Link to="/" className="flex items-center gap-3 md:gap-4 group">
               <img 
-                src={logo ? `${API_URL}${logo.image}` : "/adminimages/logo/skincollector.jpg"} 
+                src={logo ? getImageUrl(logo.image) : "/uploads/logo/skincollector.jpg"} 
                 alt={logo ? logo.name : "Skins Collector"} 
                 loading="lazy"
                 className="w-10 h-10 md:w-12 md:h-12 rounded-xl object-cover border border-white/10 group-hover:scale-105 transition-transform shadow-2xl"

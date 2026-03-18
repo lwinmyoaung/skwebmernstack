@@ -181,16 +181,16 @@ exports.deleteGameImage = async (req, res, next) => {
 exports.seedGameImages = async (req, res, next) => {
   try {
     const defaults = [
-      { gameId: 'mlbb', image: '/adminimages/photo/1BcdDv9B90JnlajqQvQaO3PBabTVre9U7A87diA1.jpg', order: 1 },
-      { gameId: 'mlbb', image: '/adminimages/photo/dmGEycfKf49L9fK6E64aG4CTBDCv9CnPw7eWA5V1.png', order: 2 },
-      { gameId: 'mcgg', image: '/adminimages/photo/dmGEycfKf49L9fK6E64aG4CTBDCv9CnPw7eWA5V1.png', order: 1 },
-      { gameId: 'mcgg', image: '/adminimages/photo/1BcdDv9B90JnlajqQvQaO3PBabTVre9U7A87diA1.jpg', order: 2 },
-      { gameId: 'pubg', image: '/adminimages/photo/mjOPd1akM06euiAdpG1vhTnwREEX8UbAJrez2Phv.jpg', order: 1 },
-      { gameId: 'pubg', image: '/adminimages/photo/z7SRsbBx9OlAo35d30jtryRHuvPkaAxCeWFeD1vf.jpg', order: 2 },
-      { gameId: 'wwm', image: '/adminimages/photo/z7SRsbBx9OlAo35d30jtryRHuvPkaAxCeWFeD1vf.jpg', order: 1 },
-      { gameId: 'wwm', image: '/adminimages/photo/mjOPd1akM06euiAdpG1vhTnwREEX8UbAJrez2Phv.jpg', order: 2 },
-      { gameId: 'freefire', image: '/adminimages/photo/1BcdDv9B90JnlajqQvQaO3PBabTVre9U7A87diA1.jpg', order: 1 },
-      { gameId: 'freefire', image: '/adminimages/photo/mjOPd1akM06euiAdpG1vhTnwREEX8UbAJrez2Phv.jpg', order: 2 },
+      { gameId: 'mlbb', image: '/uploads/photo/1BcdDv9B90JnlajqQvQaO3PBabTVre9U7A87diA1.jpg', order: 1 },
+      { gameId: 'mlbb', image: '/uploads/photo/dmGEycfKf49L9fK6E64aG4CTBDCv9CnPw7eWA5V1.png', order: 2 },
+      { gameId: 'mcgg', image: '/uploads/photo/dmGEycfKf49L9fK6E64aG4CTBDCv9CnPw7eWA5V1.png', order: 1 },
+      { gameId: 'mcgg', image: '/uploads/photo/1BcdDv9B90JnlajqQvQaO3PBabTVre9U7A87diA1.jpg', order: 2 },
+      { gameId: 'pubg', image: '/uploads/photo/mjOPd1akM06euiAdpG1vhTnwREEX8UbAJrez2Phv.jpg', order: 1 },
+      { gameId: 'pubg', image: '/uploads/photo/z7SRsbBx9OlAo35d30jtryRHuvPkaAxCeWFeD1vf.jpg', order: 2 },
+      { gameId: 'wwm', image: '/uploads/photo/z7SRsbBx9OlAo35d30jtryRHuvPkaAxCeWFeD1vf.jpg', order: 1 },
+      { gameId: 'wwm', image: '/uploads/photo/mjOPd1akM06euiAdpG1vhTnwREEX8UbAJrez2Phv.jpg', order: 2 },
+      { gameId: 'freefire', image: '/uploads/photo/1BcdDv9B90JnlajqQvQaO3PBabTVre9U7A87diA1.jpg', order: 1 },
+      { gameId: 'freefire', image: '/uploads/photo/mjOPd1akM06euiAdpG1vhTnwREEX8UbAJrez2Phv.jpg', order: 2 },
     ];
 
     const count = await GameImage.countDocuments();

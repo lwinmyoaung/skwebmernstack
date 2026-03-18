@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { API_URL } from '../config';
+import { getImageUrl } from '../utils/image';
 import { 
   ArrowLeft, 
   RefreshCw, 
@@ -210,7 +211,7 @@ const AdminProductManager = () => {
                 onClick={() => setActiveRegion(r.id)}
                 className={`flex items-center gap-2 md:gap-3 px-4 md:px-6 py-2.5 md:py-3 rounded-xl md:rounded-2xl font-black uppercase tracking-widest text-[9px] md:text-[10px] transition-all border ${activeRegion === r.id ? 'bg-primary text-black border-primary shadow-[0_0_20px_rgba(212,175,55,0.3)]' : 'bg-white/5 text-gray-500 border-white/10 hover:bg-white/10'}`}
               >
-                <img src={r.flag} alt={r.name} loading="lazy" className="w-4 h-2.5 md:w-5 md:h-3 object-cover rounded-sm" />
+                <img src={getImageUrl(r.flag)} alt={r.name} loading="lazy" className="w-4 h-2.5 md:w-5 md:h-3 object-cover rounded-sm" />
                 {r.name}
               </button>
             ))}

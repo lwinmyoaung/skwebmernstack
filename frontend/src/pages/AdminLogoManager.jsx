@@ -152,8 +152,15 @@ const AdminLogoManager = () => {
     }
   };
 
+  const getImageUrl = (path) => {
+    if (!path) return '';
+    if (path.startsWith('http') || path.startsWith('data:')) return path;
+    if (path.startsWith('/adminimages')) return path;
+    return `${API_URL}${path}`;
+  };
+
   return (
-    <div className="container mx-auto px-4 py-8 pb-32">
+    <div className="container mx-auto px-4 py-8 max-w-7xl pb-32">
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-12 gap-6">
         <div>
           <Link to="/admin" className="inline-flex items-center gap-2 text-gray-500 hover:text-primary transition-colors mb-4 group">
@@ -201,7 +208,7 @@ const AdminLogoManager = () => {
               <div className="relative h-48 bg-white/5 flex items-center justify-center p-8 overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"></div>
                 <img 
-                  src={`${API_URL}${logo.image}`} 
+                  src={getImageUrl(logo.image)} 
                   alt={logo.name}
                   loading="lazy"
                   className="max-w-full max-h-full object-contain relative z-0 group-hover:scale-110 transition-transform duration-700"

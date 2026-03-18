@@ -4,6 +4,7 @@ import { Smartphone, CheckCircle, Info, ShieldCheck, CreditCard, UserCheck, Refr
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { API_URL } from '../config';
+import { getImageUrl } from '../utils/image';
 import NotFound from './NotFound';
 
 const regions = [

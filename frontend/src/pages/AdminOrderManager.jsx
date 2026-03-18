@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { API_URL } from '../config';
+import { getImageUrl } from '../utils/image';
 import { useSocket } from '../context/SocketContext';
 import { 
   ArrowLeft, 
@@ -285,9 +286,9 @@ const AdminOrderManager = () => {
                     <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1 lg:mb-3">Transaction Info</p>
                     <div className="flex items-center gap-4">
                       <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-2xl overflow-hidden border border-white/10 group-hover:border-primary/30 transition-all">
-                        <img src={order.transaction_image} alt="Transaction" loading="lazy" className="w-full h-full object-cover" />
+                        <img src={getImageUrl(order.transaction_image)} alt="Transaction" loading="lazy" className="w-full h-full object-cover" />
                         <a 
-                          href={order.transaction_image} 
+                          href={getImageUrl(order.transaction_image)} 
                           target="_blank" 
                           rel="noreferrer"
                           className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"

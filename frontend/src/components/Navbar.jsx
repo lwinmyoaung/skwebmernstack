@@ -5,6 +5,7 @@ import { User, LogOut, LayoutDashboard, Bell, Receipt, ChevronDown, Menu, X, Sho
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API_URL } from '../config';
+import { getImageUrl } from '../utils/image';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -100,7 +101,7 @@ const Navbar = () => {
               <div className="relative">
                 <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full group-hover:bg-primary/40 transition-all"></div>
                 <img 
-                  src={logo ? `${API_URL}${logo.image}` : "/adminimages/logo/skincollector.jpg"} 
+                  src={logo ? getImageUrl(logo.image) : "/uploads/logo/skincollector.jpg"} 
                   alt={logo ? logo.name : "Skins Collector"} 
                   loading="lazy"
                   className="relative w-12 h-12 rounded-xl object-cover border border-white/10 shadow-2xl transition-transform group-hover:scale-105"

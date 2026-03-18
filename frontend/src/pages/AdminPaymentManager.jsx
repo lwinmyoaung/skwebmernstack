@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { API_URL } from '../config';
+import { getImageUrl } from '../utils/image';
 import { 
   ArrowLeft, 
   Plus, 
@@ -217,7 +218,7 @@ const AdminPaymentManager = () => {
           methods.map((m) => (
             <div key={m._id} className="luxury-card overflow-hidden group border-white/5 hover:border-primary/30 transition-all duration-500">
               <div className="relative h-40 bg-white/5 flex items-center justify-center overflow-hidden">
-                <img src={m.image} alt={m.name} loading="lazy" className="h-24 w-auto object-contain transition-transform duration-700 group-hover:scale-110" />
+                <img src={getImageUrl(m.image)} alt={m.name} loading="lazy" className="h-24 w-auto object-contain transition-transform duration-700 group-hover:scale-110" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-60"></div>
                 <div className="absolute top-4 right-4">
                   <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${m.status === 'active' ? 'bg-primary text-black' : 'bg-red-500/20 text-red-500 border border-red-500/20'}`}>

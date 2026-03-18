@@ -3,8 +3,9 @@ import { Smartphone, Eye, ShoppingCart, ChevronRight, Zap, Trophy, ShieldCheck, 
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API_URL } from '../config';
+import { getImageUrl } from '../utils/image';
 
-const GameCard = ({ game, getImageUrl }) => {
+const GameCard = ({ game }) => {
   const [currentImgIndex, setCurrentImgIndex] = useState(0);
   const [imagesLoaded, setImagesLoaded] = useState({});
   const [shouldLoadImages, setShouldLoadImages] = useState(false);
@@ -124,9 +125,9 @@ function Home() {
           setSlides(slidesRes.data.data);
         } else {
           setSlides([
-            { image: '/adminimages/ads/slides/BamR8QemjnTKb0V3S6Ki1CeMgJcR52rmevzDJuDX.png' },
-            { image: '/adminimages/ads/slides/OOQ8ifGjUv1VKxq4sWPsAJcU8qfrRvhrEzDs1C11.jpg' },
-            { image: '/adminimages/ads/slides/yjspOcki7jMtVj1omqxhFZlI6RZH8Iq3tNEOyjZI.jpg' },
+            { image: '/uploads/ads/slides/BamR8QemjnTKb0V3S6Ki1CeMgJcR52rmevzDJuDX.png' },
+            { image: '/uploads/ads/slides/OOQ8ifGjUv1VKxq4sWPsAJcU8qfrRvhrEzDs1C11.jpg' },
+            { image: '/uploads/ads/slides/yjspOcki7jMtVj1omqxhFZlI6RZH8Iq3tNEOyjZI.jpg' },
           ]);
         }
 
@@ -139,10 +140,10 @@ function Home() {
         } else {
           // Fallback to hardcoded games if DB is empty or fetch fails
           setActiveGames([
-            { gameId: 'mlbb', name: 'Mobile Legends', defaultImage: '/adminimages/photo/1BcdDv9B90JnlajqQvQaO3PBabTVre9U7A87diA1.jpg', badge: 'MOST POPULAR', color: 'from-blue-600/20 to-primary/20' },
-            { gameId: 'mcgg', name: 'Magic Chess GoGo', defaultImage: '/adminimages/photo/dmGEycfKf49L9fK6E64aG4CTBDCv9CnPw7eWA5V1.png', badge: 'NEW', color: 'from-purple-600/20 to-primary/20' },
-            { gameId: 'pubg', name: 'PUBG Mobile', defaultImage: '/adminimages/photo/mjOPd1akM06euiAdpG1vhTnwREEX8UbAJrez2Phv.jpg', badge: 'HOT', color: 'from-orange-600/20 to-primary/20' },
-            { gameId: 'wwm', name: 'WWM', defaultImage: '/adminimages/photo/z7SRsbBx9OlAo35d30jtryRHuvPkaAxCeWFeD1vf.jpg', badge: 'TRENDING', color: 'from-red-600/20 to-primary/20' },
+            { gameId: 'mlbb', name: 'Mobile Legends', defaultImage: '/uploads/photo/1BcdDv9B90JnlajqQvQaO3PBabTVre9U7A87diA1.jpg', badge: 'MOST POPULAR', color: 'from-blue-600/20 to-primary/20' },
+            { gameId: 'mcgg', name: 'Magic Chess GoGo', defaultImage: '/uploads/photo/dmGEycfKf49L9fK6E64aG4CTBDCv9CnPw7eWA5V1.png', badge: 'NEW', color: 'from-purple-600/20 to-primary/20' },
+            { gameId: 'pubg', name: 'PUBG Mobile', defaultImage: '/uploads/photo/mjOPd1akM06euiAdpG1vhTnwREEX8UbAJrez2Phv.jpg', badge: 'HOT', color: 'from-orange-600/20 to-primary/20' },
+            { gameId: 'wwm', name: 'WWM', defaultImage: '/uploads/photo/z7SRsbBx9OlAo35d30jtryRHuvPkaAxCeWFeD1vf.jpg', badge: 'TRENDING', color: 'from-red-600/20 to-primary/20' },
           ]);
         }
       } catch (err) {
@@ -170,13 +171,6 @@ function Home() {
       return () => clearInterval(timer);
     }
   }, [slides]);
-
-  const getImageUrl = (path) => {
-    if (!path) return '';
-    if (path.startsWith('http') || path.startsWith('data:')) return path;
-    if (path.startsWith('/adminimages')) return path; // Served by frontend
-    return `${API_BASE}${path}`; // Served by backend (e.g. /uploads)
-  };
 
   return (
     <div>
@@ -306,7 +300,6 @@ function Home() {
                 id: game.gameId,
                 images: getGameImagesForCategory(game.gameId, [game.defaultImage])
               }} 
-              getImageUrl={getImageUrl} 
             />
           ))}
         </div>

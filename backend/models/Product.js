@@ -4,7 +4,6 @@ const productSchema = new mongoose.Schema({
   game: {
     type: String,
     required: true,
-    enum: ['mlbb', 'pubg', 'mcgg', 'wwm'],
   },
   product_id: {
     type: String,

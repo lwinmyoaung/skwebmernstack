@@ -109,7 +109,6 @@ app.use('/api/v1/logos', logos);
 // Set static folder
 const frontendPublicPath = path.join(__dirname, '../frontend/public');
 app.use('/uploads', express.static(path.join(frontendPublicPath, 'uploads')));
-app.use('/adminimages', express.static(path.join(frontendPublicPath, 'adminimages')));
 
 // Production configuration
 if (process.env.NODE_ENV === 'production') {

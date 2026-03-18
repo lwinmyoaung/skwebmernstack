@@ -4,7 +4,6 @@ const gameImageSchema = new mongoose.Schema({
   gameId: {
     type: String,
     required: true,
-    enum: ['mlbb', 'pubg', 'mcgg', 'wwm'],
   },
   image: {
     type: String,
