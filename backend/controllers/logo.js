@@ -152,10 +152,13 @@ exports.updateLogo = (req, res, next) => {
       };
 
       if (req.file) {
-        // Delete old image
-        const oldImagePath = path.join(__dirname, '../../frontend/public', logo.image);
-        if (fs.existsSync(oldImagePath)) {
-          fs.unlinkSync(oldImagePath);
+        // Delete old image if exists
+        if (logo.image && logo.image.startsWith('/uploads')) {
+          const relativePath = logo.image.startsWith('/') ? logo.image.slice(1) : logo.image;
+          const oldImagePath = path.join(__dirname, '../../frontend/public', relativePath);
+          if (fs.existsSync(oldImagePath)) {
+            fs.unlinkSync(oldImagePath);
+          }
         }
         updateData.image = `/uploads/logo/${req.file.filename}`;
       }
@@ -186,10 +189,13 @@ exports.deleteLogo = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Logo not found' });
     }
 
-    // Delete image file
-    const imagePath = path.join(__dirname, '../../frontend/public', logo.image);
-    if (fs.existsSync(imagePath)) {
-      fs.unlinkSync(imagePath);
+    // Delete image file if it's in /uploads
+    if (logo.image && logo.image.startsWith('/uploads')) {
+      const relativePath = logo.image.startsWith('/') ? logo.image.slice(1) : logo.image;
+      const imagePath = path.join(__dirname, '../../frontend/public', relativePath);
+      if (fs.existsSync(imagePath)) {
+        fs.unlinkSync(imagePath);
+      }
     }
 
     await logo.deleteOne();

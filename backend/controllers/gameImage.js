@@ -5,7 +5,13 @@ const fs = require('fs');
 
 // Multer setup for game images
 const storage = multer.diskStorage({
-  destination: '../frontend/public/uploads/game-images',
+  destination: function(req, file, cb) {
+    const uploadDir = path.join(__dirname, '../../frontend/public/uploads/game-images');
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    cb(null, uploadDir);
+  },
   filename: function(req, file, cb) {
     cb(null, 'game-' + Date.now() + path.extname(file.originalname));
   }
@@ -121,8 +127,10 @@ exports.updateGameImage = (req, res, next) => {
 
       if (req.file) {
         // Delete old image if exists
-        if (gameImage.image.startsWith('/uploads')) {
-          const oldImagePath = path.join(__dirname, '../../frontend/public', gameImage.image);
+        if (gameImage.image && gameImage.image.startsWith('/uploads')) {
+          // Remove the leading slash if present for path.join
+          const relativePath = gameImage.image.startsWith('/') ? gameImage.image.slice(1) : gameImage.image;
+          const oldImagePath = path.join(__dirname, '../../frontend/public', relativePath);
           if (fs.existsSync(oldImagePath)) {
             fs.unlinkSync(oldImagePath);
           }
@@ -157,8 +165,10 @@ exports.deleteGameImage = async (req, res, next) => {
     }
 
     // Delete image file if it's not a default image
-    if (gameImage.image.startsWith('/uploads')) {
-      const imagePath = path.join(__dirname, '../../frontend/public', gameImage.image);
+    if (gameImage.image && gameImage.image.startsWith('/uploads')) {
+      // Remove the leading slash if present for path.join
+      const relativePath = gameImage.image.startsWith('/') ? gameImage.image.slice(1) : gameImage.image;
+      const imagePath = path.join(__dirname, '../../frontend/public', relativePath);
       if (fs.existsSync(imagePath)) {
         fs.unlinkSync(imagePath);
       }

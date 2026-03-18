@@ -5,7 +5,13 @@ const fs = require('fs');
 
 // Multer setup for slideshow images
 const storage = multer.diskStorage({
-  destination: '../frontend/public/uploads/slideshow',
+  destination: function(req, file, cb) {
+    const uploadDir = path.join(__dirname, '../../frontend/public/uploads/slideshow');
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    cb(null, uploadDir);
+  },
   filename: function(req, file, cb) {
     cb(null, 'slide-' + Date.now() + path.extname(file.originalname));
   }
@@ -119,9 +125,12 @@ exports.updateSlideshow = (req, res, next) => {
 
       if (req.file) {
         // Delete old image if exists
-        const oldImagePath = path.join(__dirname, '../../frontend/public', slideshow.image);
-        if (fs.existsSync(oldImagePath)) {
-          fs.unlinkSync(oldImagePath);
+        if (slideshow.image && slideshow.image.startsWith('/uploads')) {
+          const relativePath = slideshow.image.startsWith('/') ? slideshow.image.slice(1) : slideshow.image;
+          const oldImagePath = path.join(__dirname, '../../frontend/public', relativePath);
+          if (fs.existsSync(oldImagePath)) {
+            fs.unlinkSync(oldImagePath);
+          }
         }
         updateData.image = `/uploads/slideshow/${req.file.filename}`;
       }
@@ -184,8 +193,9 @@ exports.deleteSlideshow = async (req, res, next) => {
     }
 
     // Delete image file if it's not a default image
-    if (slideshow.image.startsWith('/uploads')) {
-      const imagePath = path.join(__dirname, '../../frontend/public', slideshow.image);
+    if (slideshow.image && slideshow.image.startsWith('/uploads')) {
+      const relativePath = slideshow.image.startsWith('/') ? slideshow.image.slice(1) : slideshow.image;
+      const imagePath = path.join(__dirname, '../../frontend/public', relativePath);
       if (fs.existsSync(imagePath)) {
         fs.unlinkSync(imagePath);
       }
