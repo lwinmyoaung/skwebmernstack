@@ -101,14 +101,26 @@ function Home() {
 
   useEffect(() => {
     const fetchData = async () => {
+      // Set loading to false early to render UI skeleton/placeholders
+      // This decouples the initial UI render from the API data fetch
+      const initialTimer = setTimeout(() => setLoading(false), 200);
+      
       try {
-        const [slidesRes, gameImagesRes, gamesRes] = await Promise.all([
+        // Parallel fetch for all critical data
+        const responses = await Promise.allSettled([
           axios.get(`${API_BASE}/api/v1/slideshows`),
           axios.get(`${API_BASE}/api/v1/game-images`),
           axios.get(`${API_BASE}/api/v1/games`)
         ]);
 
-        if (slidesRes.data.success && slidesRes.data.data.length > 0) {
+        clearTimeout(initialTimer);
+        setLoading(false);
+
+        const slidesRes = responses[0].status === 'fulfilled' ? responses[0].value : null;
+        const gameImagesRes = responses[1].status === 'fulfilled' ? responses[1].value : null;
+        const gamesRes = responses[2].status === 'fulfilled' ? responses[2].value : null;
+
+        if (slidesRes && slidesRes.data.success && slidesRes.data.data.length > 0) {
           setSlides(slidesRes.data.data);
         } else {
           setSlides([
@@ -118,14 +130,14 @@ function Home() {
           ]);
         }
 
-        if (gameImagesRes.data.success) {
+        if (gameImagesRes && gameImagesRes.data.success) {
           setGameImages(gameImagesRes.data.data);
         }
 
-        if (gamesRes.data.success && gamesRes.data.data.length > 0) {
+        if (gamesRes && gamesRes.data.success && gamesRes.data.data.length > 0) {
           setActiveGames(gamesRes.data.data);
         } else {
-          // Fallback to hardcoded games if DB is empty
+          // Fallback to hardcoded games if DB is empty or fetch fails
           setActiveGames([
             { gameId: 'mlbb', name: 'Mobile Legends', defaultImage: '/adminimages/photo/1BcdDv9B90JnlajqQvQaO3PBabTVre9U7A87diA1.jpg', badge: 'MOST POPULAR', color: 'from-blue-600/20 to-primary/20' },
             { gameId: 'mcgg', name: 'Magic Chess GoGo', defaultImage: '/adminimages/photo/dmGEycfKf49L9fK6E64aG4CTBDCv9CnPw7eWA5V1.png', badge: 'NEW', color: 'from-purple-600/20 to-primary/20' },
